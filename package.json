@@ -1,0 +1,26 @@
+{
+  "name": "chiasm-crossfilter",
+  "version": "0.0.1",
+  "description": "A Chiasm component for Crossfilter.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chiasm-project/chiasm-crossfilter.git"
+  },
+  "keywords": [
+    "crossfilter",
+    "OLAP",
+    "visualization",
+    "interaction",
+    "d3"
+  ],
+  "author": "Curran Kelleher",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chiasm-project/chiasm-crossfilter/issues"
+  },
+  "homepage": "https://github.com/chiasm-project/chiasm-crossfilter#readme"
+}
