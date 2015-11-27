@@ -1,5 +1,5 @@
 # chiasm-crossfilter
-A Chiasm component for Crossfilter.js.
+A Chiasm component for [Crossfilter.js](http://square.github.io/crossfilter/).
 
 ## Examples
 
