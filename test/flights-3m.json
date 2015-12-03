@@ -1,7 +1,0 @@
-{
-  "columns": [
-    { "name": "date", "type": "string" },
-    { "name": "delay", "type": "number" },
-    { "name": "distance", "type": "number" }
-  ]
-}
