@@ -30,10 +30,12 @@ function ChiasmCrossfilter() {
 
         // Generate an aggregate function by parsing the "aggregation" config option.
         var aggregate;
+        var interval;
         if(group.aggregation === "day"){
           aggregate = time.day;
+          interval = group.aggregation;
         } else if(group.aggregation.indexOf("floor") === 0){
-          var interval = parseInt(group.aggregation.substr(6));
+          interval = parseInt(group.aggregation.substr(6));
           aggregate = function(d) {
             return Math.floor(d / interval) * interval;
           };
@@ -41,8 +43,31 @@ function ChiasmCrossfilter() {
 
         var cfGroup = cfDimension.group(aggregate);
 
+        var columnMetadata = getColumnMetadata(dataset, dimension);
+
+        var metadata = {
+          isCube: true,
+          columns: [
+            {
+              name: "key",
+              type: columnMetadata.type,
+              label: columnMetadata.label,
+              isDimension: true,
+              interval: interval
+            },
+            {
+              name: "value",
+              type: "number",
+              label: "count"
+            }
+          ]
+        };
+
         var updateMyGroup = function (){
-          my[groupName] = cfGroup.all();
+          my[groupName] = {
+            data: cfGroup.all(),
+            metadata: metadata
+          };
 
           // Transform the data so column names are nicer?
           //.map(function (d){
@@ -71,6 +96,13 @@ function ChiasmCrossfilter() {
     }
   });
   return my;
+}
+
+// TODO move into chiasm-dataset
+function getColumnMetadata(dataset, columnName){
+  return dataset.metadata.columns.filter(function (column){
+    return column.name === columnName;
+  })[0];
 }
 
 module.exports = ChiasmCrossfilter;

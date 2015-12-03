@@ -66,11 +66,15 @@ describe("chiasm-crossfilter", function () {
     }).then(function(){
       chiasm.getComponent("cf").then(function(cf){
         cf.dataset = flightsDataset;
-        cf.when("distances", function(distances){
-          expect(distances.length).to.equal(35);
-          expect(distances[3].key).to.equal(250);
-          expect(distances[3].value).to.equal(111);
-          done();
+        cf.when("distances", function(dataset){
+          expect(dataset.data.length).to.equal(35);
+          expect(dataset.data[3].key).to.equal(250);
+          expect(dataset.data[3].value).to.equal(111);
+
+          expect(dataset.isCube);
+          expect(getColumnMetadata(dataset, "key").interval).to.equal(50);
+
+          ChiasmDataset.validate(dataset).then(done, console.log);
         });
       });
     }, console.log);
@@ -93,14 +97,25 @@ describe("chiasm-crossfilter", function () {
     }).then(function(){
       chiasm.getComponent("cf").then(function(cf){
         cf.dataset = flightsDataset;
-        cf.when("dates", function(dates){
-          expect(dates.length).to.equal(88);
-          expect(dates[3].key.getTime()).to.equal(
+        cf.when("dates", function(dataset){
+          expect(dataset.data.length).to.equal(88);
+          expect(dataset.data[3].key.getTime()).to.equal(
             new Date("Thu Jan 04 2001 00:00:00 GMT-0800 (PST)").getTime());
-          expect(dates[3].value).to.equal(11);
-          done();
+          expect(dataset.data[3].value).to.equal(11);
+
+          expect(dataset.isCube);
+          expect(getColumnMetadata(dataset, "key").interval).to.equal("day");
+
+          ChiasmDataset.validate(dataset).then(done, console.log);
         });
       });
     }, console.log);
   });
 });
+
+// TODO move into chiasm-dataset
+function getColumnMetadata(dataset, columnName){
+  return dataset.metadata.columns.filter(function (column){
+    return column.name === columnName;
+  })[0];
+}
