@@ -8,7 +8,7 @@ var ChiasmCrossfilter = require("../index")
 // This does custom data preprocessing for the flight data.
 // Modified from Crossfilter example code: https://github.com/square/crossfilter/blob/gh-pages/index.html#L231
 function loadFlightsDataset(){
-  var rawData = csv.parse(fs.readFileSync("test/flights-3m.csv", "utf8"));
+  var rawData = csv.parse(fs.readFileSync("test/flights-3m-sample.csv", "utf8"));
   return {
     data: rawData.map(function (d){
       d.date = parseDate(d.date);
@@ -46,30 +46,16 @@ function initChiasm(){
 describe("chiasm-crossfilter", function () {
 
   it("input dataset should be valid", function(done) {
-    ChiasmDataset.validate(flightsDataset).then(done);
+    ChiasmDataset.validate(flightsDataset).then(done, console.log);
   });
 
-  it("should compute histogram", function(done) {
-
+  it("should compute histogram (interval of 50)", function(done) {
     var chiasm = initChiasm();
-
     chiasm.setConfig({
       "cf": {
         "plugin": "crossfilter",
         "state": {
           "groups": {
-            //"dates": {
-            //  "dimension": "date",
-            //  "aggregation": "day"
-            //},
-            //"hours": {
-            //  "dimension": "hour",
-            //  "aggregation": "floor 1"
-            //},
-            //"delays": {
-            //  "dimension": "delay",
-            //  "aggregation": "floor 10"
-            //},
             "distances": {
               "dimension": "distance",
               "aggregation": "floor 50"
@@ -81,9 +67,37 @@ describe("chiasm-crossfilter", function () {
       chiasm.getComponent("cf").then(function(cf){
         cf.dataset = flightsDataset;
         cf.when("distances", function(distances){
-          expect(distances.length).to.equal(37);
+          expect(distances.length).to.equal(35);
           expect(distances[3].key).to.equal(250);
-          expect(distances[3].value).to.equal(94);
+          expect(distances[3].value).to.equal(111);
+          done();
+        });
+      });
+    }, console.log);
+  });
+
+  it("should compute histogram (interval of days)", function(done) {
+    var chiasm = initChiasm();
+    chiasm.setConfig({
+      "cf": {
+        "plugin": "crossfilter",
+        "state": {
+          "groups": {
+            "dates": {
+              "dimension": "date",
+              "aggregation": "day"
+            }
+          }
+        }
+      }
+    }).then(function(){
+      chiasm.getComponent("cf").then(function(cf){
+        cf.dataset = flightsDataset;
+        cf.when("dates", function(dates){
+          expect(dates.length).to.equal(88);
+          expect(dates[3].key.getTime()).to.equal(
+            new Date("Thu Jan 04 2001 00:00:00 GMT-0800 (PST)").getTime());
+          expect(dates[3].value).to.equal(11);
           done();
         });
       });

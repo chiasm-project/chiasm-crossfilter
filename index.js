@@ -1,6 +1,7 @@
 var ChiasmComponent = require("chiasm-component");
 var crossfilter = require("crossfilter");
 var Model = require("model-js");
+var time = require("d3-time");
 
 // This function defines a Chiasm component that exposes a Crossfilter instance
 // to visualizations via the Chaism configuration.
@@ -30,7 +31,7 @@ function ChiasmCrossfilter() {
         // Generate an aggregate function by parsing the "aggregation" config option.
         var aggregate;
         if(group.aggregation === "day"){
-          aggregate = d3.time.day;
+          aggregate = time.day;
         } else if(group.aggregation.indexOf("floor") === 0){
           var interval = parseInt(group.aggregation.substr(6));
           aggregate = function(d) {
