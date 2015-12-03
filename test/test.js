@@ -1,9 +1,10 @@
-var ChiasmCrossfilter = require("../index")
-    expect = require("chai").expect,
-    Chiasm = require("chiasm"),
-    ChiasmDataset = require("chiasm-dataset"),
-    fs = require("fs"),
-    csv = require("d3-dsv").csv;
+var ChiasmCrossfilter = require("../index");
+var expect = require("chai").expect;
+var fs = require("fs");
+var csv = require("d3-dsv").csv;
+var Chiasm = require("chiasm");
+var ChiasmDataset = require("chiasm-dataset");
+var getColumnMetadata = ChiasmDataset.getColumnMetadata;
 
 // This does custom data preprocessing for the flight data.
 // Modified from Crossfilter example code: https://github.com/square/crossfilter/blob/gh-pages/index.html#L231
@@ -112,10 +113,3 @@ describe("chiasm-crossfilter", function () {
     }, console.log);
   });
 });
-
-// TODO move into chiasm-dataset
-function getColumnMetadata(dataset, columnName){
-  return dataset.metadata.columns.filter(function (column){
-    return column.name === columnName;
-  })[0];
-}

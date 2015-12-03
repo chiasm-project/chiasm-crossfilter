@@ -1,7 +1,9 @@
-var ChiasmComponent = require("chiasm-component");
 var crossfilter = require("crossfilter");
-var Model = require("model-js");
 var time = require("d3-time");
+var Model = require("model-js");
+var ChiasmComponent = require("chiasm-component");
+var ChiasmDataset = require("chiasm-dataset");
+var getColumnMetadata = ChiasmDataset.getColumnMetadata;
 
 // This function defines a Chiasm component that exposes a Crossfilter instance
 // to visualizations via the Chaism configuration.
@@ -96,13 +98,6 @@ function ChiasmCrossfilter() {
     }
   });
   return my;
-}
-
-// TODO move into chiasm-dataset
-function getColumnMetadata(dataset, columnName){
-  return dataset.metadata.columns.filter(function (column){
-    return column.name === columnName;
-  })[0];
 }
 
 module.exports = ChiasmCrossfilter;
