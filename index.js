@@ -1,4 +1,6 @@
+var ChiasmComponent = require("chiasm-component");
 var crossfilter = require("crossfilter");
+var Model = require("model-js");
 
 // This function defines a Chiasm component that exposes a Crossfilter instance
 // to visualizations via the Chaism configuration.
@@ -10,7 +12,9 @@ function ChiasmCrossfilter() {
 
   var listeners = [];
 
-  my.when(["data", "groups"], function (data, groups){
+  my.when(["dataset", "groups"], function (dataset, groups){
+    var data = dataset.data;
+
     if(groups !== Model.None) {
       var cf = crossfilter(data);
       var updateFunctions = [];
@@ -38,6 +42,14 @@ function ChiasmCrossfilter() {
 
         var updateMyGroup = function (){
           my[groupName] = cfGroup.all();
+
+          // Transform the data so column names are nicer?
+          //.map(function (d){
+          //  var row = {};
+          //  row[dimension] = d.key;
+          //  row.count = d.value;
+          //  return row;
+          //});
         };
         updateFunctions.push(updateMyGroup);
         updateMyGroup();
