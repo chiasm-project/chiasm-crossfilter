@@ -33,8 +33,8 @@ function ChiasmCrossfilter() {
         // Generate an aggregate function by parsing the "aggregation" config option.
         var aggregate;
         var interval;
-        if(group.aggregation === "day"){
-          aggregate = time.day;
+        if(group.aggregation in time){
+          aggregate = time[group.aggregation];
           interval = group.aggregation;
         } else if(group.aggregation.indexOf("floor") === 0){
           interval = parseInt(group.aggregation.substr(6));

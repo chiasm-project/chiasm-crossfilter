@@ -112,4 +112,36 @@ describe("chiasm-crossfilter", function () {
       });
     }, console.log);
   });
+
+  it("should compute histogram (interval of months)", function(done) {
+    var chiasm = initChiasm();
+    chiasm.setConfig({
+      "cf": {
+        "plugin": "crossfilter",
+        "state": {
+          "groups": {
+            "dates": {
+              "dimension": "date",
+              "aggregation": "month"
+            }
+          }
+        }
+      }
+    }).then(function(){
+      chiasm.getComponent("cf").then(function(cf){
+        cf.dataset = flightsDataset;
+        cf.when("dates", function(dataset){
+          expect(dataset.data.length).to.equal(3);
+          expect(dataset.data[1].key.getTime()).to.equal(
+            new Date("Thu Feb 01 2001 00:00:00 GMT-0800 (PST)").getTime());
+          expect(dataset.data[1].value).to.equal(324);
+
+          expect(dataset.isCube);
+          expect(getColumnMetadata(dataset, "key").interval).to.equal("month");
+
+          ChiasmDataset.validate(dataset).then(done, console.log);
+        });
+      });
+    }, console.log);
+  });
 });
