@@ -102,8 +102,8 @@ describe("chiasm-crossfilter", function () {
         cf.when("dates", function(dataset){
           expect(dataset.data.length).to.equal(88);
           expect(dataset.data[1].key.toUTCString())
-            .to.equal("Tue, 02 Jan 2001 08:00:00 GMT");
-          expect(dataset.data[3].value).to.equal(14);
+            .to.equal("Tue, 02 Jan 2001 00:00:00 GMT");
+          expect(dataset.data[3].value).to.equal(11);
 
           expect(dataset.isCube);
           expect(getColumnMetadata(dataset, "key").interval).to.equal("day");
@@ -134,8 +134,8 @@ describe("chiasm-crossfilter", function () {
         cf.when("dates", function(dataset){
           expect(dataset.data.length).to.equal(3);
           expect(dataset.data[1].key.toUTCString())
-            .to.equal("Thu, 01 Feb 2001 08:00:00 GMT");
-          expect(dataset.data[1].value).to.equal(325);
+            .to.equal("Thu, 01 Feb 2001 00:00:00 GMT");
+          expect(dataset.data[1].value).to.equal(324);
 
           expect(dataset.isCube);
           expect(getColumnMetadata(dataset, "key").interval).to.equal("month");

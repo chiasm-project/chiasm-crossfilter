@@ -5,6 +5,22 @@ var ChiasmComponent = require("chiasm-component");
 var ChiasmDataset = require("chiasm-dataset");
 var getColumnMetadata = ChiasmDataset.getColumnMetadata;
 
+// These are the supported time intervals for aggregation.
+// UTC is used for aggregation intervals because otherwise,
+// d3-time would use local times, and different users would 
+// get different results (see different visualizations)
+// depending on which time zone they are in. 
+var timeIntervals = {
+  millisecond: "utcMillisecond",
+  second: "utcSecond",
+  minute: "utcMinute",
+  hour: "utcHour",
+  day: "utcDay",
+  week: "utcWeek",
+  month: "utcMonth",
+  year: "utcYear"
+};
+
 // This function defines a Chiasm component that exposes a Crossfilter instance
 // to visualizations via the Chaism configuration.
 function ChiasmCrossfilter() {
@@ -33,8 +49,8 @@ function ChiasmCrossfilter() {
         // Generate an aggregate function by parsing the "aggregation" config option.
         var aggregate;
         var interval;
-        if(group.aggregation in time){
-          aggregate = time[group.aggregation];
+        if(group.aggregation in timeIntervals){
+          aggregate = time[timeIntervals[group.aggregation]];
           interval = group.aggregation;
         } else if(group.aggregation.indexOf("floor") === 0){
           interval = parseInt(group.aggregation.substr(6));
@@ -70,15 +86,8 @@ function ChiasmCrossfilter() {
             data: cfGroup.all(),
             metadata: metadata
           };
-
-          // Transform the data so column names are nicer?
-          //.map(function (d){
-          //  var row = {};
-          //  row[dimension] = d.key;
-          //  row.count = d.value;
-          //  return row;
-          //});
         };
+
         updateFunctions.push(updateMyGroup);
         updateMyGroup();
 
