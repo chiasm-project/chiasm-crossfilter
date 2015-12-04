@@ -29,11 +29,12 @@ function loadFlightsDataset(){
   };
 }
 function parseDate(d) {
-  return new Date(Date.UTC(2001,
-    +d.substring(0, 2) - 1,
-    +d.substring(2, 4),
-    +d.substring(4, 6),
-    +d.substring(6, 8)));
+  return new Date(Date.UTC(
+    2001, // year
+    +d.substring(0, 2) - 1, // month
+    +d.substring(2, 4), // day
+    +d.substring(4, 6), // hour
+    +d.substring(6, 8))); // minute
 }
 
 var flightsDataset = loadFlightsDataset();
