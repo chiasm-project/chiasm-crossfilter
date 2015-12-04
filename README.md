@@ -1,4 +1,7 @@
 # chiasm-crossfilter
+
+[![Build Status](https://travis-ci.org/chiasm-project/chiasm-crossfilter.svg)](https://travis-ci.org/chiasm-project/chiasm-crossfilter)
+
 A Chiasm component for [Crossfilter.js](http://square.github.io/crossfilter/).
 
 ## Examples
