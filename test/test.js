@@ -100,8 +100,8 @@ describe("chiasm-crossfilter", function () {
         cf.dataset = flightsDataset;
         cf.when("dates", function(dataset){
           expect(dataset.data.length).to.equal(88);
-          expect(dataset.data[3].key.getTime()).to.equal(
-            new Date("Thu Jan 04 2001 00:00:00 GMT-0800 (PST)").getTime());
+          expect(dataset.data[1].key.toISOString())
+            .to.equal("2001-01-02T08:00:00.000Z");
           expect(dataset.data[3].value).to.equal(11);
 
           expect(dataset.isCube);
@@ -132,8 +132,8 @@ describe("chiasm-crossfilter", function () {
         cf.dataset = flightsDataset;
         cf.when("dates", function(dataset){
           expect(dataset.data.length).to.equal(3);
-          expect(dataset.data[1].key.getTime()).to.equal(
-            new Date("Thu Feb 01 2001 00:00:00 GMT-0800 (PST)").getTime());
+          expect(dataset.data[1].key.toISOString())
+            .to.equal("2001-02-01T08:00:00.000Z");
           expect(dataset.data[1].value).to.equal(324);
 
           expect(dataset.isCube);
