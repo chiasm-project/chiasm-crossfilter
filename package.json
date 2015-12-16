@@ -4,6 +4,7 @@
   "description": "A Chiasm component for Crossfilter.js.",
   "main": "index.js",
   "scripts": {
+    "pretest": "browserify -g browserify-shim -o chiasm-crossfilter.js -s ChiasmCrossfilter index.js",
     "test": "mocha"
   },
   "repository": {
@@ -23,6 +24,12 @@
     "url": "https://github.com/chiasm-project/chiasm-crossfilter/issues"
   },
   "homepage": "https://github.com/chiasm-project/chiasm-crossfilter#readme",
+  "browserify-shim": {
+    "d3": "global:d3",
+    "model-js": "global:Model",
+    "chiasm-component": "global:ChiasmComponent",
+    "crossfilter": "global:crossfilter"
+  },
   "dependencies": {
     "chiasm-component": "^0.2.3",
     "chiasm-dataset": "^0.1.1",
@@ -31,6 +38,8 @@
     "model-js": "^0.2.4"
   },
   "devDependencies": {
+    "browserify": "^11.2.0",
+    "browserify-shim": "^3.8.10",
     "chai": "^3.4.1",
     "chiasm": "^0.3.0",
     "d3-dsv": "^0.1.11",
