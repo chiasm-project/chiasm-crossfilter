@@ -47,16 +47,20 @@ function ChiasmCrossfilter() {
         var cfDimension = cf.dimension(function (d){ return d[dimension]; });
 
         // Generate an aggregate function by parsing the "aggregation" config option.
-        var aggregate;
+        var aggregate = function (d){ return d; };
         var interval;
-        if(group.aggregation in timeIntervals){
-          aggregate = time[timeIntervals[group.aggregation]];
-          interval = group.aggregation;
-        } else if(group.aggregation.indexOf("floor") === 0){
-          interval = parseInt(group.aggregation.substr(6));
-          aggregate = function(d) {
-            return Math.floor(d / interval) * interval;
-          };
+        if(group.aggregation){
+          if(group.aggregation in timeIntervals){
+            aggregate = time[timeIntervals[group.aggregation]];
+            interval = group.aggregation;
+          } else if(group.aggregation.indexOf("floor") === 0){
+            interval = parseInt(group.aggregation.substr(6));
+            aggregate = function(d) {
+              return Math.floor(d / interval) * interval;
+            };
+          } else {
+            throw new Error("Invalid aggregation configuration: " + group.aggregation);
+          }
         }
 
         var cfGroup = cfDimension.group(aggregate);

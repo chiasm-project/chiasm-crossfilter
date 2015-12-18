@@ -5,6 +5,7 @@ var csv = require("d3-dsv").csv;
 var Chiasm = require("chiasm");
 var ChiasmDataset = require("chiasm-dataset");
 var getColumnMetadata = ChiasmDataset.getColumnMetadata;
+var dsvDataset = require("dsv-dataset");
 
 // This does custom data preprocessing for the flight data.
 // Modified from Crossfilter example code: https://github.com/square/crossfilter/blob/gh-pages/index.html#L231
@@ -39,6 +40,29 @@ function parseDate(d) {
 
 var flightsDataset = loadFlightsDataset();
 
+var irisDataset = dsvDataset.parse({
+  // This string contains CSV data that could be loaded from a .csv file.
+  dsvString: [
+    "sepal_length,sepal_width,petal_length,petal_width,class",
+    "5.1,3.5,1.4,0.2,setosa",
+    "5.1,3.5,1.4,0.2,setosa",
+    "6.2,2.9,4.3,1.3,versicolor",
+    "6.3,3.3,6.0,2.5,virginica"
+  ].join("\n"),
+
+  // This metadata object specifies the delimiter and column types.
+  // This could be loaded from a .json file.
+  metadata: {
+    delimiter: ",",
+    columns: [
+      { name: "sepal_length", type: "number" },
+      { name: "sepal_width",  type: "number" },
+      { name: "petal_length", type: "number" },
+      { name: "petal_width",  type: "number" },
+      { name: "class",        type: "string" }
+    ]
+  }
+});
 function initChiasm(){
   var chiasm = Chiasm();
   chiasm.plugins.crossfilter = ChiasmCrossfilter = require("../index");
@@ -145,4 +169,38 @@ describe("chiasm-crossfilter", function () {
       });
     }, console.log);
   });
+  it("should compute categorical aggregation", function(done) {
+    var chiasm = initChiasm();
+    chiasm.setConfig({
+      "cf": {
+        "plugin": "crossfilter",
+        "state": {
+          "groups": {
+            "classes": {
+              "dimension": "class"
+            }
+          }
+        }
+      }
+    }).then(function(){
+      chiasm.getComponent("cf").then(function(cf){
+        cf.dataset = irisDataset;
+        cf.when("classes", function(dataset){
+          expect(dataset.data.length).to.equal(3);
+
+          expect(where(dataset.data, "key", "setosa").value).to.equal(2);
+          expect(where(dataset.data, "key", "virginica").value).to.equal(1);
+
+          expect(dataset.isCube);
+          ChiasmDataset.validate(dataset).then(done, console.log);
+        });
+      });
+    }, console.log);
+  });
 });
+
+function where(arr, property, value){
+  return arr.filter(function (d){
+    return d[property] === value;
+  })[0];
+}
