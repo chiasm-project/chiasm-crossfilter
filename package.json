@@ -1,6 +1,6 @@
 {
   "name": "chiasm-crossfilter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Chiasm component for Crossfilter.js.",
   "main": "index.js",
   "scripts": {
